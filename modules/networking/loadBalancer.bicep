@@ -1,59 +1,59 @@
-@description('Internal Load Balancer name')
+@description('Load Balancer name')
 param loadBalancerName string
 
 @description('Azure region')
 param location string
 
-@description('Load Balancer SKU')
-param skuName string = 'Standard'
+@description('Load Balancer SKU name')
+param skuName string
 
-@description('Load Balancer tier')
-param skuTier string = 'Regional'
+@description('Load Balancer SKU tier')
+param skuTier string
 
-@description('Existing subnet resource ID where the ILB frontend will reside')
+@description('Existing subnet resource ID')
 param subnetId string
-
-@description('Static private IP used by the ILB and future SQL AG listener')
-param frontendPrivateIp string
 
 @description('Frontend IP configuration name')
 param frontendName string
 
-@description('Backend address pool name')
+@description('Static frontend private IP')
+param frontendPrivateIp string
+
+@description('Backend pool name')
 param backendPoolName string
 
-@description('Backend IP addresses. Empty until SQL VMs are available.')
-param backendAddresses array = []
+@description('Backend IP addresses')
+param backendAddresses array
 
 @description('Health probe name')
 param probeName string
 
 @description('Health probe protocol')
-param probeProtocol string = 'Tcp'
+param probeProtocol string
 
 @description('Health probe port')
-param probePort int = 59999
+param probePort int
 
 @description('Load balancing rule name')
 param ruleName string
 
 @description('Load balancing rule protocol')
-param ruleProtocol string = 'Tcp'
+param ruleProtocol string
 
 @description('Frontend port')
-param frontendPort int = 1433
+param frontendPort int
 
 @description('Backend port')
-param backendPort int = 1433
+param backendPort int
 
-@description('Idle timeout in minutes')
-param idleTimeoutInMinutes int = 4
+@description('Idle timeout')
+param idleTimeoutInMinutes int
 
-@description('Enable Floating IP / Direct Server Return')
-param enableFloatingIp bool = true
+@description('Enable Floating IP / DSR')
+param enableFloatingIp bool
 
 @description('Enable TCP reset')
-param enableTcpReset bool = true
+param enableTcpReset bool
 
 
 //===================================================
@@ -80,11 +80,12 @@ var probeId = resourceId(
 
 
 //===================================================
-// INTERNAL STANDARD LOAD BALANCER
+// INTERNAL LOAD BALANCER
 //===================================================
 
 resource loadBalancer 'Microsoft.Network/loadBalancers@2025-05-01' = {
   name: loadBalancerName
+
   location: location
 
   sku: {
@@ -95,7 +96,7 @@ resource loadBalancer 'Microsoft.Network/loadBalancers@2025-05-01' = {
   properties: {
 
     //=================================================
-    // FRONTEND IP
+    // FRONTEND
     //=================================================
 
     frontendIPConfigurations: [
@@ -116,7 +117,7 @@ resource loadBalancer 'Microsoft.Network/loadBalancers@2025-05-01' = {
 
 
     //=================================================
-    // BACKEND ADDRESS POOL
+    // BACKEND POOL
     //=================================================
 
     backendAddressPools: [
@@ -196,10 +197,6 @@ resource loadBalancer 'Microsoft.Network/loadBalancers@2025-05-01' = {
   }
 }
 
-
-//===================================================
-// OUTPUTS
-//===================================================
 
 output loadBalancerId string = loadBalancer.id
 
