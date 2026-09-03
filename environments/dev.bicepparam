@@ -16,20 +16,21 @@ param location = 'centralus'
 
 param landingZones = {
 
-  //=================================================
-  // INTERNAL LOAD BALANCER
-  //=================================================
-
   loadBalancers: [
 
     {
+      //=============================================
+      // RESOURCE GROUP
+      //=============================================
+
+      resourceGroupName: 'rg-sql-ag-dev'
+
+
       //=============================================
       // LOAD BALANCER
       //=============================================
 
       loadBalancerName: 'ilb-sql-ag-dev'
-
-      resourceGroupName: 'rg-sql-ag-dev'
 
       location: location
 
@@ -46,12 +47,11 @@ param landingZones = {
 
 
       //=============================================
-      // ILB FRONTEND
+      // FRONTEND
       //=============================================
 
       frontendName: 'sql-ag-frontend'
 
-      // This will also be the future AG listener IP
       frontendPrivateIp: '10.10.1.20'
 
 
@@ -60,9 +60,6 @@ param landingZones = {
       //=============================================
 
       backendPoolName: 'sql-ag-backend-pool'
-
-      // SQL VMs don't exist yet.
-      // Add their private IPs after VM creation.
 
       backendAddresses: []
 
